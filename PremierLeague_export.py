@@ -1,3 +1,6 @@
+# Historical modeling walkthrough. For the executed EDA, corrected inclusive test
+# cutoff, current metrics and reproducible figures, run analysis.py or open
+# PremierLeagueAnalysis.ipynb. The original experiment is retained for comparison.
 # --- Cell 0 ---
 import pandas as pd
 
