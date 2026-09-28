@@ -7,6 +7,8 @@ next fixture uses each team's last three completed observations in matches.csv.
 from pathlib import Path
 import hashlib
 import json
+import re
+import base64
 
 import numpy as np
 import pandas as pd
@@ -120,10 +122,12 @@ def main():
     (web / 'data.js').write_text('window.MATCHUP_DATA = ' + json.dumps(payload, separators=(',', ':')) + ';\n', encoding='utf-8')
     # Portable one-file edition: opening this HTML needs neither Python nor a server.
     html = (web / 'index.html').read_text(encoding='utf-8')
-    html = html.replace('<link rel="stylesheet" href="styles.css">',
-                        '<style>' + (web / 'styles.css').read_text(encoding='utf-8') + '</style>')
-    html = html.replace('<link rel="stylesheet" href="theme.css">',
-                        '<style>' + (web / 'theme.css').read_text(encoding='utf-8') + '</style>')
+    for sheet in ['styles.css', 'theme.css', 'typography.css']:
+        style = '<style>' + (web / sheet).read_text(encoding='utf-8') + '</style>'
+        html = re.sub(r'<link rel="stylesheet" href="' + re.escape(sheet) + r'(?:\?[^"]*)?">', lambda _: style, html)
+    font = base64.b64encode((web / 'fonts/albert-sans-latin.woff2').read_bytes()).decode()
+    html = html.replace("url('fonts/albert-sans-latin.woff2')", "url('data:font/woff2;base64," + font + "')")
+    html += '\n<!-- Bundled Albert Sans font license:\n' + (web / 'fonts/OFL.txt').read_text(encoding='utf-8') + '\n-->\n'
     for name in ['data.js', 'predict.js', 'app.js']:
         source = (web / name).read_text(encoding='utf-8').replace('</script', '<\\/script')
         html = html.replace(f'<script src="{name}" defer></script>', '<script defer>' + source + '</script>')
