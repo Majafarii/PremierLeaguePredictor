@@ -6,6 +6,29 @@ An end-to-end Python project that turns historical football match statistics int
 
 **Start with the [executed analysis notebook](PremierLeagueAnalysis.ipynb)** to see the questions, code, tables, charts and model results together.
 
+## Try the matchup webpage
+
+Open [web/index.html](web/index.html) in a browser after downloading the repository. **Matchday** lets you select a home and away team, swap venues, see the model's pick or an uncertain result, and inspect the last three recorded matches behind it. It runs entirely in your browser, with no account, server or API key required. GitHub displays HTML source rather than running it; download the folder before opening the page.
+
+The page uses the same pre-2022 training split and Random Forest settings as the evaluated rolling model. It contains 506 precomputed ordered matchups across all 23 recorded teams, assuming a Saturday 15:00 kickoff. Each hypothetical next fixture uses the team's latest three completed matches. The two win scores are independent binary estimates: they are not normalized to total 100%, are not calibrated probabilities, and do not supply a draw probability. A winner is shown only when one team exceeds 50% and the other does not; otherwise the result is “No clear winner.” The hypothetical matchup tool itself has not been separately validated.
+
+Explanations include actual model sensitivity checks: replace attacking/defensive inputs with training-period medians or toggle venue, holding other inputs fixed. These changes explain model behavior, not causation or additive feature attribution. The page shows source dates and flags older snapshots, including Liverpool's 2021 records. **This is a historical demo, not current-season forecasting.**
+
+Regenerate the website data and a portable single-file edition with:
+
+```bash
+python build_web.py
+```
+
+Then open `web/matchday.html`. This generated file includes all styles and data and can be shared as a single file. To publish the webpage, the contents of `web/` can be served by any static host. No public hosting is configured by this change.
+
+Validation commands:
+
+```bash
+python -m unittest discover -s tests -p test_web_model.py
+node --test tests/test_web.cjs
+```
+
 ## Key findings
 
 - **Win rates:** Manchester City leads the observed sample at 73.2% (52 wins in 71 team-matches). These are pooled sample rates, not a complete 2021–22 league table.
@@ -108,6 +131,6 @@ python build_notebook.py
 
 ## Limitations and next steps
 
-The project demonstrates data auditing, grouped analysis, visualization, feature engineering and honest holdout evaluation. It does not export a fitted model or provide a deployed application. The main limitations are incomplete coverage, undocumented provenance, one historical test period, arbitrary numeric opponent codes and related team-match observations. Category labels are constructed from the full CSV as in the original project; future work should fit encodings on training data and handle unseen opponents explicitly.
+The project demonstrates data auditing, grouped analysis, visualization, feature engineering, honest holdout evaluation and an interactive historical matchup demo. The webpage stores precomputed model outputs, not a live prediction service or exported model object. The main limitations are incomplete coverage, undocumented provenance, one historical test period, arbitrary numeric opponent codes and related team-match observations. Category labels are constructed from the full CSV as in the original project; future work should fit encodings on training data and handle unseen opponents explicitly.
 
 Priorities for a separate modeling iteration are to restore complete fixture coverage, document the data source, evaluate several chronological windows, inspect probability calibration and test stronger baselines. The current work preserves the original modeling approach rather than claiming those improvements have already been made.
