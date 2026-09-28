@@ -122,6 +122,8 @@ def main():
     html = (web / 'index.html').read_text(encoding='utf-8')
     html = html.replace('<link rel="stylesheet" href="styles.css">',
                         '<style>' + (web / 'styles.css').read_text(encoding='utf-8') + '</style>')
+    html = html.replace('<link rel="stylesheet" href="theme.css">',
+                        '<style>' + (web / 'theme.css').read_text(encoding='utf-8') + '</style>')
     for name in ['data.js', 'predict.js', 'app.js']:
         source = (web / name).read_text(encoding='utf-8').replace('</script', '<\\/script')
         html = html.replace(f'<script src="{name}" defer></script>', '<script defer>' + source + '</script>')
