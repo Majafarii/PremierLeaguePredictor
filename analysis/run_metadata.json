@@ -1,0 +1,13 @@
+{
+  "python": "3.12.14",
+  "pandas": "2.2.3",
+  "numpy": "2.1.3",
+  "scikit_learn": "1.5.2",
+  "matplotlib": "3.9.2",
+  "data_sha256": "2e84c9d9d0890b0c2a15f903c427e7532683a1436f23fdbd293fbd0b53149996",
+  "cutoff": "2022-01-01",
+  "test_includes_cutoff": true,
+  "always_nonwin_accuracy": 0.6205673758865248,
+  "xg_goals_correlation": 0.6222860331932888,
+  "dropped_rolling_rows": 72
+}

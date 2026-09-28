@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Compare two Premier League teams using a historical Random Forest model and their last three recorded matches.">
+  <title>Matchday — Premier League Predictor</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="theme.css?v=3">
+  <link rel="stylesheet" href="typography.css?v=3">
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="#"><span class="brand-mark" aria-hidden="true">M<span>•</span></span><span>MATCHDAY<span class="brand-sub">PREMIER LEAGUE PREDICTOR</span></span></a>
+      <nav class="header-nav" aria-label="Main navigation"><a href="#selection-title">Predictions</a><a href="#method">About</a></nav>
+    </header>
+    <main>
+      <aside class="dashboard-sidebar" aria-label="Football navigation">
+        <h2>Your league</h2>
+        <a class="league-active" href="#page-title"><span aria-hidden="true">⚽</span> Premier League</a>
+        <div class="sidebar-divider"></div>
+        <h2>Matchday</h2>
+        <a href="#selection-title"><span aria-hidden="true">⇄</span> Match predictor</a>
+        <a href="#form-title"><span aria-hidden="true">▤</span> Team form</a>
+        <a href="#method"><span aria-hidden="true">ⓘ</span> About the model</a>
+        <div class="sidebar-note"><span class="archive-dot"></span> Historical archive<p>23 teams · 506 matchups<br>2020–21 / 2021–22</p></div>
+      </aside>
+      <div class="dashboard-body">
+      <section class="intro" aria-labelledby="page-title">
+        <div><p class="eyebrow">PREMIER LEAGUE</p><h1 id="page-title">Match predictor</h1><p class="intro-copy">Two teams. One matchup. See who has the edge.</p></div>
+        <div class="pitch" aria-hidden="true"><div class="pitch-mid"></div><div class="pitch-circle"></div><div class="penalty left"></div><div class="penalty right"></div><span class="pitch-player p1">H</span><span class="pitch-player p2">A</span><span class="pitch-caption">FORM × OPPONENT × VENUE</span></div>
+      </section>
+      <div class="historical-note"><span class="note-icon" aria-hidden="true">i</span><p><strong>A historical matchup sandbox.</strong> Uses recorded form through 25 April 2022; some teams’ records end in 2021. This is not a live fixture forecast.</p></div>
+      <div class="workspace">
+        <section class="card selection" aria-labelledby="selection-title">
+          <div class="section-heading"><span class="step">01</span><h2 id="selection-title">Set the matchup</h2></div>
+          <form id="match-form">
+            <label for="home-team">HOME TEAM <span>Hosts</span></label><select id="home-team" name="home" required></select>
+            <div class="swap-row"><span></span><button type="button" id="swap" aria-label="Swap home and away teams">⇅ <span>Swap sides</span></button><span></span></div>
+            <label for="away-team">AWAY TEAM <span>Visitors</span></label><select id="away-team" name="away" required></select>
+            <p class="fixture-assumption"><span aria-hidden="true">◷</span> Saturday · 15:00 kickoff assumed</p>
+            <p id="form-error" class="form-error" role="alert" hidden></p>
+            <button type="submit" class="predict-button">Predict matchup <span aria-hidden="true">→</span></button>
+          </form>
+          <div class="selection-footer"><span class="mini-ball" aria-hidden="true">◎</span><p><strong>Recent form, not reputation.</strong><br>Powered by the project’s rolling-feature Random Forest.</p></div>
+        </section>
+        <section class="result-panel" id="result" aria-labelledby="result-title" aria-live="polite" aria-atomic="true">
+          <div class="result-top"><p class="eyebrow">THE MODEL’S CALL</p><span class="result-badge" id="verdict-badge">Historical estimate</span></div>
+          <h2 id="result-title">Choose your teams</h2><p class="result-description" id="result-description">Compare their recorded form to explore a matchup.</p>
+          <div id="score-bars" class="score-bars"></div>
+          <p class="score-disclaimer">Independent win scores, not a three-way forecast. They do not have to total 100%; draws are included in “non-win”.</p>
+          <div class="result-bottom"><span class="result-status" id="result-status">Historical model</span><span>LAST 3 RECORDED MATCHES</span></div>
+        </section>
+      </div>
+      <section class="explanation" aria-labelledby="why-title">
+        <div class="section-heading"><span class="step">02</span><h2 id="why-title">What’s behind the call?</h2></div>
+        <p class="section-copy">A look at recent form and the inputs that move this model’s score.</p>
+        <div id="reasons" class="reason-grid"></div>
+        <p class="sensitivity-note">Score shifts are one-at-a-time model checks, not causal effects or contributions that add up. Attack and defense are compared with typical training-period form; venue is compared with the opposite venue.</p>
+      </section>
+      <section class="card form-card" aria-labelledby="form-title">
+        <div class="section-heading"><span class="step">03</span><h2 id="form-title">The form book</h2><span class="table-tag">3-MATCH AVERAGES</span></div>
+        <div id="coverage-warning" class="coverage-warning" role="note" hidden></div>
+        <div id="form-comparison"></div>
+        <details class="recent-details"><summary>See the six matches behind these averages <span aria-hidden="true">+</span></summary><div id="recent-matches" class="recent-grid"></div></details>
+      </section>
+      <section id="method" class="method-section">
+        <div><p class="eyebrow">A LITTLE CONTEXT</p><h2>A model’s pick.<br>Not a promise.</h2><p>This demo uses the same historical model as the project’s analysis. It can identify a lean, but football remains uncertain.</p></div>
+        <div class="method-content"><details open><summary>How does it choose a winner?<span>+</span></summary><p>Each team is evaluated separately as win versus non-win. A team is picked only when its win score is above 50% and its opponent’s is not. If neither passes, or both do, the page reports no clear winner. A non-win could be a draw or a loss.</p></details>
+        <details><summary>Why is the data historical?<span>+</span></summary><p>The repository contains 2020–21 and partial 2021–22 match records, not a live feed. Every team uses its own last three recorded matches; the dates are shown above. Liverpool and some other teams have no 2021–22 team records. Matchups between different snapshots are illustrative.</p></details>
+        <details><summary>How was the model evaluated?<span>+</span></summary><p id="evaluation-copy"></p><p>These are holdout classification results, not an accuracy guarantee for this hypothetical matchup tool. The displayed scores are uncalibrated model estimates, not verified probabilities.</p></details>
+        <details><summary>Which inputs does it use?<span>+</span></summary><p>Venue, opponent, kickoff hour, weekday, and three-match averages of goals scored, goals conceded, shots, shots on target, shot distance, free kicks and penalties. Kickoff is fixed to Saturday at 15:00 for this basic demo.</p><p>Training windows use <code>closed='left'</code> to exclude each current match. For a hypothetical next fixture, all three most recent completed matches are already known and may be used.</p></details></div>
+      </section>
+      </div>
+    </main>
+    <footer><span><strong>MATCHDAY</strong> · A PremierLeaguePredictor project</span><span>Historical data. Transparent reasoning.</span></footer>
+  </div>
+  <noscript><p class="noscript">Enable JavaScript to select teams and see their matchup.</p></noscript>
+  <script src="data.js" defer></script>
+  <script src="predict.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
